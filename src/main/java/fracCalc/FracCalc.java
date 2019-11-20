@@ -97,14 +97,14 @@ public class FracCalc {
     	}
 
     	String substringFour = "whole:" + wholeNumber + " numerator:" + numerator + " denominator:" + denominator;
-    	return substringFour; //commented out for the purpose of checkpoint3.
+    	//return substringFour; //commented out for the purpose of checkpoint3.
     	
 //---------------------------------------Checkpoint3----------------------------------------------------------------------
 /*This part will be dealing with the first operand. It will also include calling the math part of the project. This part
  * of the code will do the the same thing as the last part just with the first operand. Then it will plug in the numbers
  * into the math part and then return a String. The tests in this checkpoint may be useless depending on what is 
  * commented out.*/
-    	/*String operandOne = input.substring(0, firstSpace + 1);
+    	String operandOne = input.substring(0, firstSpace + 1);
     	String operandOneWholeNumber;
     	String operandOneNumerator;
     	String operandOneDenominator;
