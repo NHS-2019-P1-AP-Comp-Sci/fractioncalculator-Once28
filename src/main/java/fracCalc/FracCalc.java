@@ -52,7 +52,7 @@ public class FracCalc {
     	int secondSpace = substringOne.indexOf(" ");
     	String substringTwo = input.substring(firstSpace + 1, firstSpace + 2); //the operation symbol
     	String substringThree = substringOne.substring(secondSpace + 1);//numbers after operation
-    	return substringThree;
+    	//return substringThree;
     	
 //--------------------------------Checkpoint1 test----------------------------------------------------------------------
     	//System.out.println(substringOne + " " + firstSpace + " " + substringTwo + " " + secondSpace + " " + substringThree); // checks what values are what
@@ -63,7 +63,7 @@ public class FracCalc {
     	 * numerator and denominator. The if else statements says that if there is in fact a whole number or a fraction,
     	 * then it will either set the strings to 0 or set them to the number they represent.*/   
     	
-    	/*String wholeNumber; //These are only second operand whole number, numerator and denominator
+    	String wholeNumber; //These are only second operand whole number, numerator and denominator
     	String numerator;
     	String denominator;
  
@@ -97,7 +97,7 @@ public class FracCalc {
     	}
 
     	String substringFour = "whole:" + wholeNumber + " numerator:" + numerator + " denominator:" + denominator;
-    	//return substringFour; //commented out for the purpose of checkpoint3.
+    	return substringFour; //commented out for the purpose of checkpoint3.
     	
 //---------------------------------------Checkpoint3----------------------------------------------------------------------
 /*This part will be dealing with the first operand. It will also include calling the math part of the project. This part
@@ -469,33 +469,35 @@ public class FracCalc {
         	int product; //product with no fractions
           	int numerator = 0; //the numerator after the multiplication
         	int denominator = 1; //the common denominator of the factions, default no fraction
-        		
-        	if (parsedWholeNum1 < 0 || parsedNumerator1 < 0 || parsedDenominator1 < 0 || parsedWholeNum2 < 0 || parsedNumerator2 < 0 || parsedDenominator2 < 0) {
         	
-        		if (parsedDenominator1 == parsedDenominator2) { //common denominators
-          			 
-        			denominator = parsedDenominator1 * parsedDenominator2;
-        			numerator = ((parsedWholeNum1 * denominator + parsedNumerator1) * (parsedWholeNum2 * denominator + parsedNumerator2)); // the sum of the numerator
+        	denominator = parsedDenominator1 * parsedDenominator2;	
+        	
+        	if ((parsedWholeNum1 < 0 || parsedNumerator1 < 0) && (parsedWholeNum2 < 0 || parsedNumerator2 < 0)) {
+        	
+                 	int positiveFirstOp = Math.abs(parsedWholeNum1) * parsedDenominator1 + Math.abs(parsedNumerator1); // set first operand to positive when adding fractions
+     		 		int positiveSecondOp = Math.abs(parsedWholeNum2) * parsedDenominator2 + Math.abs(parsedNumerator2); // set second operand to positive when adding fractions
+        			numerator = (-positiveFirstOp * -positiveSecondOp); // the sum of the numerator
+        			//System.out.println(positiveFirstOp + " " + positiveSecondOp); //checks what the numerators are after changing to positive
  			 	
+        	} else if (parsedWholeNum1 < 0 || parsedNumerator1 < 0) { //first operand is negative
+        	
+        	  		int positiveFirstOp = Math.abs(parsedWholeNum1) * parsedDenominator1 + Math.abs(parsedNumerator1); // set first operand to positive when adding fractions
+           			numerator = (-positiveFirstOp * (parsedWholeNum2 * parsedDenominator2 + parsedNumerator2)); // the sum of the numerator
  			 	
-        		} else { //no common denominators
- 			 
-        			denominator = parsedDenominator1 * parsedDenominator2;
-        			numerator = ((parsedWholeNum1 * parsedDenominator1 + parsedNumerator1) * (parsedWholeNum2 * parsedDenominator2 + parsedNumerator2));
- 			 	
-        		}
-        		
+        	} else if (parsedWholeNum2 < 0 || parsedNumerator2 < 0) { //second operand is negative
+        	
+       		 		int positiveSecondOp = Math.abs(parsedWholeNum2) * parsedDenominator2 + Math.abs(parsedNumerator2); // set second operand to positive when adding fractions          			 
+        			numerator = ((parsedWholeNum1 * parsedDenominator1 + parsedNumerator1) * -positiveSecondOp); // the sum of the numerator
+ 			 	    //System.out.println(positiveSecondOp); //checks what the numerator is after changing to positive
+ 			 	    
         	} else { // not negative
         		
         		if (parsedDenominator1 == parsedDenominator2) { //common denominators
    			 
-        			denominator = parsedDenominator1 * parsedDenominator2;
         			numerator = ((parsedWholeNum1 * denominator + parsedNumerator1) * (parsedWholeNum2 * denominator + parsedNumerator2)); // the sum of the numerator
- 			 	
  			 	
         		} else { //no common denominators
  			 
-        			denominator = parsedDenominator1 * parsedDenominator2;
         			numerator = ((parsedWholeNum1 * parsedDenominator1 + parsedNumerator1) * (parsedWholeNum2 * parsedDenominator2 + parsedNumerator2));
  			 	
         		}
@@ -516,13 +518,19 @@ public class FracCalc {
     			 numerator = -numerator;
     			 denominator = Math.abs(denominator);
     			 
-    		 }
+    		 } 
     		
-        	if (numerator /  denominator >= 1) { //tests to see whether if the fraction from the difference is a improper fraction
+        	if (Math.abs(numerator) /  denominator >= 1) { //tests to see whether if the fraction from the difference is a improper fraction
     			 
     			 product = numerator / denominator;
     			 numerator -= product * denominator;
- 
+    			 
+    			 if (product < 0 && numerator < 0) {
+    				 
+    				 numerator = Math.abs(numerator);
+    				 
+    			 }
+    			 
     			 if (numerator == 0) {
     				 
     				results = Integer.toString(product);
@@ -530,6 +538,10 @@ public class FracCalc {
     			 } else if (denominator == 1) { //when it is a whole number, there is no fractions
     			 
     				results = Integer.toString(product);
+    				 
+    			 } else if (denominator == -1) {
+    				 
+    				 results = Integer.toString(-product);
     				 
     			 } else {
     				 
@@ -552,26 +564,85 @@ public class FracCalc {
     		 }
         	
          }
-//-----------------------------------------Division---------------------------------------------------         
+//-----------------------------------------Division--------------------------------------------------------------------------------------------------------------------------   
          if (operation.contentEquals("/")){
         	 
         	int quotient; //quotient with no fractions
         	int numerator = 0; //the numerator after the multiplication
         	int denominator = 1; //the common denominator of the factions, default no fraction
-        		
-        	if (parsedDenominator1 == parsedDenominator2) { //common denominators so denominators cancel out
-   			 
- 			 	denominator = parsedWholeNum2 * denominator + parsedNumerator2;
- 			 	numerator = parsedWholeNum1 * denominator + parsedNumerator1;  // 
- 			 	
- 			 	
- 		 	 } else { //no common denominators
- 			 
- 			 	denominator = parsedDenominator1 * (parsedWholeNum2 * denominator + parsedNumerator2);
- 			 	numerator = (parsedWholeNum1 * denominator + parsedNumerator1) * parsedDenominator2;
- 			 	
- 			 }
+                	
+        	if ((parsedWholeNum1 < 0 || parsedNumerator1 < 0) && (parsedWholeNum2 < 0 || parsedNumerator2 < 0)) {
         	
+                int positiveFirstOp = Math.abs(parsedWholeNum1) * parsedDenominator1 + Math.abs(parsedNumerator1); // set first operand to positive when adding fractions
+     		 	int positiveSecondOp = Math.abs(parsedWholeNum2) * parsedDenominator2 + Math.abs(parsedNumerator2); // set second operand to positive when adding fractions
+        		
+     		 	if (parsedDenominator1 == parsedDenominator2) { //common denominators so denominators cancel out
+     	   			 
+         			denominator = -positiveSecondOp;
+         			numerator = -positiveFirstOp;  
+ 			 	
+ 			 	
+         		} else { //no common denominators
+ 			 
+         			denominator = parsedDenominator1 * -positiveSecondOp;
+         			numerator = -positiveFirstOp * parsedDenominator2;
+ 			 	
+         		}
+     		 	
+        		//System.out.println(positiveFirstOp + " " + positiveSecondOp); //checks what the numerators are after changing to positive
+ 			 	
+        	} else if (parsedWholeNum1 < 0 || parsedNumerator1 < 0) { //first operand is negative
+        	
+        	  	int positiveFirstOp = Math.abs(parsedWholeNum1) * parsedDenominator1 + Math.abs(parsedNumerator1); // set first operand to positive when adding fractions
+           			
+        	  	if (parsedDenominator1 == parsedDenominator2) { //common denominators so denominators cancel out
+        	   			 
+             		denominator = parsedWholeNum2 * denominator + parsedNumerator2;
+             		numerator = -positiveFirstOp;  
+     			 	
+     			 	
+             	} else { //no common denominators
+     			 
+             		denominator = parsedDenominator1 * (parsedWholeNum2 * denominator + parsedNumerator2);
+             		numerator = -positiveFirstOp * parsedDenominator2;
+     			 	
+             	}
+ 			 	
+        	} else if (parsedWholeNum2 < 0 || parsedNumerator2 < 0) { //second operand is negative
+        	
+       		 	int positiveSecondOp = Math.abs(parsedWholeNum2) * parsedDenominator2 + Math.abs(parsedNumerator2); // set second operand to positive when adding fractions          			 
+       		 	
+       		 	if (parsedDenominator1 == parsedDenominator2) { //common denominators so denominators cancel out
+          			 
+         			denominator = -positiveSecondOp;
+         			numerator = parsedWholeNum1 * denominator + parsedNumerator1;  // 
+ 			 	
+ 			 	
+         		} else { //no common denominators
+ 			 
+         			denominator = parsedDenominator1 * -positiveSecondOp;
+         			numerator = (parsedWholeNum1 * denominator + parsedNumerator1) * parsedDenominator2;
+ 			 	
+         		}
+       		 		//System.out.println(positiveSecondOp); //checks what the numerator is after changing to positive
+ 			 	    
+        	} else { // not negative
+        		
+         		if (parsedDenominator1 == parsedDenominator2) { //common denominators so denominators cancel out
+   			 
+         			denominator = parsedWholeNum2 * denominator + parsedNumerator2;
+         			numerator = parsedWholeNum1 * denominator + parsedNumerator1;  // 
+ 			 	
+ 			 	
+         		} else { //no common denominators
+ 			 
+         			denominator = parsedDenominator1 * (parsedWholeNum2 * denominator + parsedNumerator2);
+         			numerator = (parsedWholeNum1 * denominator + parsedNumerator1) * parsedDenominator2;
+ 			 	
+         		}
+        	
+         }
+         
     		 //System.out.println(numerator); //checks what the numerator is
         	
         	if ( numerator < 0 && denominator < 0) {  //negatives cancel, if negative is on the denominator, it will be moved onto the numerator
@@ -586,11 +657,17 @@ public class FracCalc {
      			 
      		 }
     		 
-        	if (numerator /  denominator >= 1) { //tests to see whether if the fraction from the difference is a improper fraction
+        	if (Math.abs(numerator) /  denominator >= 1) { //tests to see whether if the fraction from the difference is a improper fraction
     			 
     			 quotient = numerator / denominator;
     			 numerator -= quotient * denominator;
     			 
+    			 if (quotient < 0 && numerator < 0) {
+    				 
+    				 numerator = Math.abs(numerator);
+    				 
+    			 }
+
     			 if (numerator == 0) {
     				 
     				results = Integer.toString(quotient);
@@ -599,8 +676,12 @@ public class FracCalc {
     			 
     				results = Integer.toString(quotient);
     				 
-    			 } else {
+    			 } else if (denominator == -1) {
     				 
+    				 results = Integer.toString(-quotient);
+    				 
+    			 } else {
+    			    				 
     			 results = Integer.toString(quotient) + "_" + Integer.toString(numerator) + "/" + Integer.toString(denominator);
     			
     			 }
